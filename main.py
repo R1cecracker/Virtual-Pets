@@ -8,37 +8,70 @@ class Pet:
         self.boredom = 3
         self.sleepiness = 3
         self.dead = False
+        self.level = 0
+        self.exp = 0
+        self.gained_exp = 0
+        self.total_exp = 0
 
     def __str__(self):
-        string = f"""Name: {self.name}
+        string = f"""
+Name: {self.name}
 Age: {self.age}
 Hunger: {"•" * self.hunger}
 Boredom: {"•" * self.boredom}
 Sleepiness: {"•" * self.sleepiness}
+Level: {self.level}
+Exp until next level: {200 - self.exp}
 Dead? {self.dead}
 """
         return string
+
+    def level_up(self):
+        if self.exp >= 200:
+            self.level += 1
+            self.exp -= 200
+            print(f"{self.name} leveled up! Level: {self.level}")
+        else:
+            print()
 
     def feed(self):
         if self.dead:
             return
         self.hunger = self.hunger - 4
+        if self.hunger > -1:
+            self.gained_exp += randint(50, 100)
         if self.hunger < -1:
             self.hunger = -1
+            self.gained_exp += randint(25, 50)
+        self.exp += self.gained_exp
+        self.total_exp += self.gained_exp
+        self.gained_exp = 0
         
     def play(self):
         if self.dead:
             return
         self.boredom = self.boredom - 4
+        if self.boredom > -1:
+            self.gained_exp += randint(50, 100)
         if self.boredom < -1:
             self.boredom = -1
+            self.gained_exp += randint(25, 50)
+        self.exp += self.gained_exp
+        self.total_exp += self.gained_exp
+        self.gained_exp = 0
     
     def rest(self):
         if self.dead:
             return
         self.sleepiness = self.sleepiness - 6
+        if self.sleepiness > -1:
+            self.gained_exp += randint(50, 100)
         if self.sleepiness < -1:
             self.sleepiness = -1
+            self.gained_exp += randint(25, 50)
+        self.exp += self.gained_exp
+        self.total_exp += self.gained_exp
+        self.gained_exp = 0
 
     def check_dead(self):
         if self.boredom == 10 or self.age >= randint(15,20) or self.hunger == 10 or self.sleepiness == 10:
@@ -51,6 +84,10 @@ Dead? {self.dead}
         self.hunger += 1
         self.boredom += 1
         self.sleepiness += 1
+        self.gained_exp += randint(10, 20)
+        self.exp += self.gained_exp
+        self.total_exp += self.gained_exp
+        self.gained_exp = 0
 
         if self.hunger > 10:
             self.hunger = 10
@@ -59,36 +96,50 @@ Dead? {self.dead}
         if self.sleepiness > 10:
             self.sleepiness = 10
         self.check_dead()
+        self.level_up()
 
 name = input("What would you like to name your pet? ")
 pet = Pet(name)
 print(pet)
 
-action = input("What would you like to do? (feed/play/rest/wait) ")
+action = input("What would you like to do? feed/play/rest/wait (exit to quit) ")
 while action != "exit":
     if action == "feed":
         pet.feed()
         pet.wait()
         print(pet)
-        action = input("What would you like to do? (feed/play/rest/wait) ")
+        if pet.dead == True:
+            break
+        action = input("What would you like to do? feed/play/rest/wait (exit to quit) ")
     elif action == "play":
         pet.play()
         pet.wait()
         print(pet)
-        action = input("What would you like to do? (feed/play/rest/wait) ")
+        if pet.dead == True:
+            break
+        action = input("What would you like to do? feed/play/rest/wait (exit to quit) ")
     elif action == "rest":
         pet.rest()
         pet.wait()
         print(pet)
-        action = input("What would you like to do? (feed/play/rest/wait) ")
+        if pet.dead == True:
+            break        
+        action = input("What would you like to do? feed/play/rest/wait (exit to quit) ")
     elif action == "wait":
         pet.wait()
         print(pet)
-        action = input("What would you like to do? (feed/play/rest/wait) ")
+        if pet.dead == True:
+            break        
+        action = input("What would you like to do? feed/play/rest/wait (exit to quit) ")
     else:
-        print("Invalid action. Please choose 'feed', 'play', or 'rest'.")
-        action = input("What would you like to do? (feed/play/rest/wait) ")
-
+        if pet.dead == True:
+            break
+        print("Invalid action. Please choose 'feed', 'play', 'rest', 'wait' or 'quit'.")
+        action = input("What would you like to do? feed/play/rest/wait (exit to quit) ")
+    pet.level_up()
+print("Game over.\n")
+print(f"Final stats: \n{pet}")
+print(f"Total exp gained: {pet.total_exp}")
 ####----Task 1----####
 #Set up your pet with the following attributes:
 #name (make this mandatory), age (default:0), hunger (default: 5), boredom (default:3), sleepiness(default:3)
