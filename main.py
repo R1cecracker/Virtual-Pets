@@ -1,3 +1,5 @@
+from random import randint
+
 class Pet:
     def __init__(self, pet_name):
         self.name = pet_name
@@ -9,37 +11,34 @@ class Pet:
 
     def __str__(self):
         string = f"""Name: {self.name}
-Age: {str(self.age)}
-Hunger: {str(self.hunger)}
-Boredom: {str(self.boredom)}
-Sleepiness: {str(self.sleepiness)}
-Dead? {str(self.dead)}
+Age: {self.age}
+Hunger: {"•" * self.hunger}
+Boredom: {"•" * self.boredom}
+Sleepiness: {"•" * self.sleepiness}
+Dead? {self.dead}
 """
         return string
 
     def feed(self):
         if self.dead:
             return
-        self.hunger = self.hunger - 3
-        if self.hunger < 0:
-            self.hunger = 0
-            self.hunger -= 3
+        self.hunger = self.hunger - 4
+        if self.hunger < -1:
+            self.hunger = -1
         
     def play(self):
         if self.dead:
             return
-        self.boredom = self.boredom - 3
-        if self.boredom < 0:
-            self.boredom = 0
-            self.boredom -= 3
+        self.boredom = self.boredom - 4
+        if self.boredom < -1:
+            self.boredom = -1
     
     def rest(self):
         if self.dead:
             return
-        self.sleepiness = self.sleepiness - 5
-        if self.sleepiness < 0:
-            self.sleepiness = 0
-            self.sleepiness -= 5
+        self.sleepiness = self.sleepiness - 4
+        if self.sleepiness < -1:
+            self.sleepiness = -1
 
     def wait(self):
         if self.dead:
@@ -57,31 +56,37 @@ Dead? {str(self.dead)}
             self.sleepiness = 10
 
     def dead(self):
-        if self.boredom == 10 and self.age >= 15 and self.hunger == 10 and self.sleepiness == 10:
+        if self.boredom == 10 or self.age >= randint(15,20) or self.hunger == 10 or self.sleepiness == 10:
             self.dead = True
 
 name = input("What would you like to name your pet? ")
 pet = Pet(name)
-print(name)
+print(pet)
 
-action = input("What would you like to do? (feed/play/rest/wait/exit) ")
+action = input("What would you like to do? (feed/play/rest/wait) ")
 while action != "exit":
     if action == "feed":
         pet.feed()
+        pet.wait()
+        print(pet)
+        action = input("What would you like to do? (feed/play/rest/wait) ")
     elif action == "play":
         pet.play()
+        pet.wait()
+        print(pet)
+        action = input("What would you like to do? (feed/play/rest/wait) ")
     elif action == "rest":
         pet.rest()
+        pet.wait()
+        print(pet)
+        action = input("What would you like to do? (feed/play/rest/wait) ")
     elif action == "wait":
         pet.wait()
-    elif action == "check":
         print(pet)
-    elif action == "exit":
-        print("Goodbye!")
-        break
+        action = input("What would you like to do? (feed/play/rest/wait) ")
     else:
         print("Invalid action. Please choose 'feed', 'play', or 'rest'.")
-        action = input("What would you like to do? (feed/play/rest/wait/exit) ")
+        action = input("What would you like to do? (feed/play/rest/wait) ")
 
 ####----Task 1----####
 #Set up your pet with the following attributes:
