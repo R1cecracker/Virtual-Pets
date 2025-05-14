@@ -36,9 +36,13 @@ Dead? {self.dead}
     def rest(self):
         if self.dead:
             return
-        self.sleepiness = self.sleepiness - 4
+        self.sleepiness = self.sleepiness - 6
         if self.sleepiness < -1:
             self.sleepiness = -1
+
+    def check_dead(self):
+        if self.boredom == 10 or self.age >= randint(15,20) or self.hunger == 10 or self.sleepiness == 10:
+            self.dead = True
 
     def wait(self):
         if self.dead:
@@ -54,10 +58,7 @@ Dead? {self.dead}
             self.boredom = 10
         if self.sleepiness > 10:
             self.sleepiness = 10
-
-    def dead(self):
-        if self.boredom == 10 or self.age >= randint(15,20) or self.hunger == 10 or self.sleepiness == 10:
-            self.dead = True
+        self.check_dead()
 
 name = input("What would you like to name your pet? ")
 pet = Pet(name)
